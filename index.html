@@ -270,6 +270,119 @@
       0% { transform: translate(-50%, 0) scale(0.7); opacity: 1; }
       100% { transform: translate(calc(-50% + var(--dx)), -140px) scale(1.3); opacity: 0; }
     }
+
+    /* Collection Showcase Drawer ("Vetrinetta") */
+    .showcase-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: rgba(14, 4, 8, 0.82);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      display: flex;
+      flex-direction: column;
+      padding: calc(env(safe-area-inset-top, 16px) + 16px) 18px calc(env(safe-area-inset-bottom, 16px) + 18px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(24px);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+    .showcase-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .showcase-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto 16px;
+    }
+    .showcase-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0;
+    }
+    .showcase-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+    .close-btn {
+      appearance: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      font-size: 16px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+      overflow-y: auto;
+      padding-bottom: 16px;
+    }
+    .shelf-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 14px 10px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 215, 225, 0.14);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.03) 100%);
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .shelf-card:active { transform: scale(0.96); }
+    .shelf-card.active {
+      border-color: rgba(255, 117, 143, 0.7);
+      box-shadow: 0 0 22px rgba(255, 77, 109, 0.22);
+    }
+    .shelf-card.locked {
+      border-style: dashed;
+      opacity: 0.65;
+      cursor: default;
+      justify-content: center;
+      min-height: 176px;
+    }
+    .shelf-thumb {
+      width: 96px;
+      height: 96px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 16px rgba(255, 45, 85, 0.28));
+      margin-bottom: 8px;
+    }
+    .shelf-month {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 19px;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+    .shelf-date {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 3px;
+    }
+    .shelf-lock-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+      opacity: 0.85;
+    }
   </style>
 
   <script type="importmap">
@@ -301,6 +414,7 @@
     <div class="bottom-wrap">
       <div class="action-row">
         <button class="btn" id="flipBtn">↻ Flip to back</button>
+        <button class="btn" id="collectionBtn">✦ Collection</button>
         <button class="btn btn-heart" id="loveBtn">♥</button>
       </div>
 
@@ -313,6 +427,18 @@
         <div class="timeline" id="timeline"></div>
       </div>
     </div>
+  </div>
+
+  <!-- Collection Showcase Drawer -->
+  <div class="showcase-overlay" id="showcase">
+    <div class="showcase-header">
+      <div>
+        <h2 class="showcase-title">Our Collection</h2>
+        <div class="showcase-sub" id="showcaseSub">1 heart collected</div>
+      </div>
+      <button class="close-btn" id="closeShowcase" aria-label="Close">✕</button>
+    </div>
+    <div class="showcase-grid" id="showcaseGrid"></div>
   </div>
 
   <script type="module">
@@ -494,8 +620,37 @@
       document.getElementById('counterText').textContent = `${monthsLabel} together ♥ · ${stats.diffDays} days`;
 
       const timeline = document.getElementById('timeline');
+      const showcase = document.getElementById('showcase');
+      const showcaseGrid = document.getElementById('showcaseGrid');
+      const showcaseSub = document.getElementById('showcaseSub');
+      const collectionBtn = document.getElementById('collectionBtn');
+      const closeShowcase = document.getElementById('closeShowcase');
+
       const hearts = data.hearts || [];
       let activeIdx = hearts.length - 1;
+
+      const countWord = hearts.length === 1 ? '1 heart' : `${hearts.length} hearts`;
+      collectionBtn.textContent = `✦ Collection (${hearts.length})`;
+      showcaseSub.textContent = `${countWord} collected`;
+
+      collectionBtn.addEventListener('click', () => {
+        renderShowcase();
+        showcase.classList.add('open');
+      });
+      closeShowcase.addEventListener('click', () => showcase.classList.remove('open'));
+      showcase.addEventListener('click', (e) => {
+        if (e.target === showcase) showcase.classList.remove('open');
+      });
+
+      function selectHeart(idx) {
+        activeIdx = idx;
+        showingBack = false;
+        targetAzimuth = 0;
+        flipBtn.textContent = '↻ Flip to back';
+        renderTimeline();
+        renderShowcase();
+        loadHeart(hearts[idx]);
+      }
 
       function renderTimeline() {
         timeline.innerHTML = '';
@@ -503,14 +658,7 @@
           const chip = document.createElement('button');
           chip.className = 'month-chip' + (idx === activeIdx ? ' active' : '');
           chip.innerHTML = `<span class="chip-dot" style="background:${h.color || '#d91616'}"></span><span>Month ${h.month}</span>`;
-          chip.addEventListener('click', () => {
-            activeIdx = idx;
-            showingBack = false;
-            targetAzimuth = 0;
-            flipBtn.textContent = '↻ Flip to back';
-            renderTimeline();
-            loadHeart(h);
-          });
+          chip.addEventListener('click', () => selectHeart(idx));
           timeline.appendChild(chip);
         });
 
@@ -522,7 +670,36 @@
         timeline.appendChild(nextChip);
       }
 
+      function renderShowcase() {
+        showcaseGrid.innerHTML = '';
+        hearts.forEach((h, idx) => {
+          const card = document.createElement('div');
+          card.className = 'shelf-card' + (idx === activeIdx ? ' active' : '');
+          card.innerHTML = `
+            <img class="shelf-thumb" src="${h.preview}?v=${Date.now()}" alt="Month ${h.month}" />
+            <div class="shelf-month">Month ${h.month}</div>
+            <div class="shelf-date">${h.dateDisplay}</div>
+          `;
+          card.addEventListener('click', () => {
+            selectHeart(idx);
+            showcase.classList.remove('open');
+          });
+          showcaseGrid.appendChild(card);
+        });
+
+        const nextNum = Math.max((hearts[hearts.length - 1]?.month || 0) + 1, stats.nextMonthNum);
+        const locked = document.createElement('div');
+        locked.className = 'shelf-card locked';
+        locked.innerHTML = `
+          <div class="shelf-lock-icon">🔒</div>
+          <div class="shelf-month">Month ${nextNum}</div>
+          <div class="shelf-date">Unlocks in ${stats.daysUntilNext} days</div>
+        `;
+        showcaseGrid.appendChild(locked);
+      }
+
       renderTimeline();
+      renderShowcase();
       if (hearts.length > 0) loadHeart(hearts[activeIdx]);
     }
 
