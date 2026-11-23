@@ -6,7 +6,7 @@
 
 // 1) INCOLLA QUI L'URL DOVE HAI PUBBLICATO LA CARTELLA "app"
 //    (esempio Netlify Drop: "https://cuore-glauco-yuliia.netlify.app")
-const BASE_URL = "https://INSERISCI-QUI-IL-TUO-URL.netlify.app";
+const BASE_URL = "https://glaucoamoroso.github.io/MonthGift";
 
 // Cache locale su iPhone (funziona anche offline)
 const fm = FileManager.local();

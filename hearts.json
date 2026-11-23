@@ -4,12 +4,26 @@
   "anniversaryDay": 22,
   "hearts": [
     {
+      "month": 1,
+      "date": "2026-10-22",
+      "dateDisplay": "22.10.2026",
+      "title": "1 Month Anniversary",
+      "backNote": "Walking toward the sea ♥",
+      "message": "Where our story began. Flip it around to see us walking toward the sea ♥",
+      "model": "models/month-01.glb",
+      "preview": "previews/month-01.png",
+      "color": "#c91834",
+      "metalness": 0.06,
+      "roughness": 0.19,
+      "clearcoat": 1.0
+    },
+    {
       "month": 2,
       "date": "2026-11-22",
       "dateDisplay": "22.11.2026",
       "title": "2 Months Anniversary",
       "backNote": "three good ♥",
-      "message": "The very first heart of our collection. Spin it around to read the secret on the back!",
+      "message": "Month two together. Spin it around to read our secret on the back!",
       "model": "models/month-02.glb",
       "preview": "previews/month-02.png",
       "color": "#d91616",
