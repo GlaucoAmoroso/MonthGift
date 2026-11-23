@@ -1,0 +1,21 @@
+{
+  "couple": "Glauco & Yuliia",
+  "startDate": "2026-09-22",
+  "anniversaryDay": 22,
+  "hearts": [
+    {
+      "month": 2,
+      "date": "2026-11-22",
+      "dateDisplay": "22.11.2026",
+      "title": "2 Months Anniversary",
+      "backNote": "three good ♥",
+      "message": "Il primo cuore della nostra collezione. Giralo per leggere il segreto sul retro!",
+      "model": "models/month-02.glb",
+      "preview": "previews/month-02.png",
+      "color": "#d91616",
+      "metalness": 0.06,
+      "roughness": 0.18,
+      "clearcoat": 1.0
+    }
+  ]
+}

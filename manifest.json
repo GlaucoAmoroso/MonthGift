@@ -1,0 +1,17 @@
+{
+  "name": "Glauco & Yuliia ♥",
+  "short_name": "Noi Due ♥",
+  "description": "La collezione dei nostri cuori 3D, mese dopo mese.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#16070c",
+  "theme_color": "#16070c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
