@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
@@ -8,7 +8,7 @@
   <!-- iOS PWA -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Noi Due ♥" />
+  <meta name="apple-mobile-web-app-title" content="Us ♥" />
   <meta name="theme-color" content="#16070c" />
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <link rel="manifest" href="manifest.json" />
@@ -289,18 +289,18 @@
       <h1 class="couple-title" id="coupleTitle">Glauco &amp; Yuliia</h1>
       <div class="counter-pill">
         <span class="pulse-dot"></span>
-        <span id="counterText">Calcolo mesi insieme…</span>
+        <span id="counterText">Counting our days together…</span>
       </div>
     </header>
 
     <div class="loader" id="loader">
       <div class="spinner"></div>
-      <span>Caricamento cuore 3D…</span>
+      <span>Loading 3D heart…</span>
     </div>
 
     <div class="bottom-wrap">
       <div class="action-row">
-        <button class="btn" id="flipBtn">↻ Gira sul retro</button>
+        <button class="btn" id="flipBtn">↻ Flip to back</button>
         <button class="btn btn-heart" id="loveBtn">♥</button>
       </div>
 
@@ -309,7 +309,7 @@
           <h2 class="heart-title" id="heartTitle">2 Months Anniversary</h2>
           <span class="heart-date" id="heartDate">22.11.2026</span>
         </div>
-        <p class="heart-msg" id="heartMsg">Giralo con il dito per leggere il retro!</p>
+        <p class="heart-msg" id="heartMsg">Spin it around to read the back!</p>
         <div class="timeline" id="timeline"></div>
       </div>
     </div>
@@ -329,39 +329,65 @@
     // --- Three.js Scene ---
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(34, window.innerWidth / window.innerHeight, 0.1, 50);
-    camera.position.set(0, 0.12, 4.35);
+
+    function getIdealDistance() {
+      const aspect = window.innerWidth / window.innerHeight;
+      // On narrow portrait phones, pull back so the heart fits cleanly with generous margins
+      if (aspect < 1) {
+        return Math.min(7.2, Math.max(4.8, 3.15 / aspect));
+      }
+      return 4.4;
+    }
+
+    camera.position.set(0, 0.12, getIdealDistance());
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.12;
+    renderer.toneMappingExposure = 1.08;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     stage.appendChild(renderer.domElement);
 
-    // Studio environment for glossy clearcoat reflections
+    // Subtle studio environment (kept gentle so shadows & engraving contrast stay rich!)
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = 0.55;
 
-    // Key + Rim + Fill lights so engraved letters pop beautifully from front and back
-    const keyLight = new THREE.DirectionalLight(0xfff5f5, 2.2);
-    keyLight.position.set(-2.5, 3.2, 4.0);
-    scene.add(keyLight);
+    // Raking Key + Back lights with crisp real-time self-shadowing
+    function makeShadowLight(x, y, z, intensity) {
+      const l = new THREE.DirectionalLight(0xfff4f4, intensity);
+      l.position.set(x, y, z);
+      l.castShadow = true;
+      l.shadow.mapSize.set(2048, 2048);
+      l.shadow.camera.near = 0.5;
+      l.shadow.camera.far = 12;
+      const d = 1.3;
+      l.shadow.camera.left = -d;
+      l.shadow.camera.right = d;
+      l.shadow.camera.top = d;
+      l.shadow.camera.bottom = -d;
+      l.shadow.bias = -0.0006;
+      l.shadow.normalBias = 0.012;
+      scene.add(l);
+      return l;
+    }
 
-    const backLight = new THREE.DirectionalLight(0xffeef2, 2.0);
-    backLight.position.set(2.5, 2.8, -4.0);
-    scene.add(backLight);
+    makeShadowLight(-2.2, 2.8, 2.6, 2.4);
+    makeShadowLight(2.2, 2.8, -2.6, 2.2);
 
-    const rimLight = new THREE.DirectionalLight(0xffb3c1, 0.9);
-    rimLight.position.set(3.0, -1.5, 1.5);
+    const rimLight = new THREE.DirectionalLight(0xffb3c1, 0.75);
+    rimLight.position.set(3.2, -1.2, 1.2);
     scene.add(rimLight);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.06;
     controls.enablePan = false;
-    controls.minDistance = 2.6;
-    controls.maxDistance = 6.5;
-    controls.target.set(0, -0.08, 0);
+    controls.minDistance = 2.8;
+    controls.maxDistance = 9.0;
+    controls.target.set(0, -0.18, 0);
 
     const gltfLoader = new GLTFLoader();
     let currentGroup = null;
@@ -375,7 +401,7 @@
       document.getElementById('heartMsg').textContent = heart.message;
 
       gltfLoader.load(
-        heart.model,
+        heart.model + '?v=' + Date.now(),
         (gltf) => {
           if (currentGroup) {
             scene.remove(currentGroup);
@@ -383,15 +409,18 @@
           const root = gltf.scene;
           const mat = new THREE.MeshPhysicalMaterial({
             color: new THREE.Color(heart.color || '#d91616'),
-            metalness: heart.metalness ?? 0.06,
-            roughness: heart.roughness ?? 0.18,
-            clearcoat: heart.clearcoat ?? 1.0,
-            clearcoatRoughness: 0.07,
-            reflectivity: 0.9,
+            vertexColors: true,
+            metalness: heart.metalness ?? 0.05,
+            roughness: heart.roughness ?? 0.20,
+            clearcoat: heart.clearcoat ?? 0.95,
+            clearcoatRoughness: 0.08,
+            reflectivity: 0.85,
           });
           root.traverse((obj) => {
             if (obj.isMesh) {
               obj.material = mat;
+              obj.castShadow = true;
+              obj.receiveShadow = true;
             }
           });
           currentGroup = root;
@@ -400,8 +429,8 @@
         },
         undefined,
         (err) => {
-          console.error('Errore caricamento GLB:', err);
-          loaderEl.innerHTML = '<span>Impossibile caricare il modello 3D</span>';
+          console.error('Error loading GLB:', err);
+          loaderEl.innerHTML = '<span>Could not load 3D heart</span>';
         }
       );
     }
@@ -410,7 +439,7 @@
     flipBtn.addEventListener('click', () => {
       showingBack = !showingBack;
       targetAzimuth = showingBack ? Math.PI : 0;
-      flipBtn.textContent = showingBack ? '↺ Torna al fronte' : '↻ Gira sul retro';
+      flipBtn.textContent = showingBack ? '↺ Back to front' : '↻ Flip to back';
     });
 
     controls.addEventListener('start', () => {
@@ -461,8 +490,8 @@
 
       document.getElementById('coupleTitle').textContent = data.couple;
       const stats = computeTogetherStats(data.startDate, data.anniversaryDay || 22);
-      const mesiLabel = stats.months === 1 ? '1 mese' : `${stats.months} mesi`;
-      document.getElementById('counterText').textContent = `${mesiLabel} insieme ♥ · ${stats.diffDays} giorni`;
+      const monthsLabel = stats.months === 1 ? '1 month' : `${stats.months} months`;
+      document.getElementById('counterText').textContent = `${monthsLabel} together ♥ · ${stats.diffDays} days`;
 
       const timeline = document.getElementById('timeline');
       const hearts = data.hearts || [];
@@ -473,12 +502,12 @@
         hearts.forEach((h, idx) => {
           const chip = document.createElement('button');
           chip.className = 'month-chip' + (idx === activeIdx ? ' active' : '');
-          chip.innerHTML = `<span class="chip-dot" style="background:${h.color || '#d91616'}"></span><span>Mese ${h.month}</span>`;
+          chip.innerHTML = `<span class="chip-dot" style="background:${h.color || '#d91616'}"></span><span>Month ${h.month}</span>`;
           chip.addEventListener('click', () => {
             activeIdx = idx;
             showingBack = false;
             targetAzimuth = 0;
-            flipBtn.textContent = '↻ Gira sul retro';
+            flipBtn.textContent = '↻ Flip to back';
             renderTimeline();
             loadHeart(h);
           });
@@ -489,7 +518,7 @@
         const nextChip = document.createElement('div');
         nextChip.className = 'month-chip locked';
         const nextNum = Math.max((hearts[hearts.length - 1]?.month || 0) + 1, stats.nextMonthNum);
-        nextChip.innerHTML = `<span>🔒 Mese ${nextNum} · tra ${stats.daysUntilNext}g</span>`;
+        nextChip.innerHTML = `<span>🔒 Month ${nextNum} · in ${stats.daysUntilNext}d</span>`;
         timeline.appendChild(nextChip);
       }
 

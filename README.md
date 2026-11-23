@@ -38,6 +38,15 @@ Fatto! Ora il widget mostra il cuore del mese corrente + i mesi/giorni insieme, 
 
 ---
 
+## Passo 3B — Aggiungi il Widget anche sul tuo Android!
+Ho creato anche **`widget.html`** apposta per Android (identico a quello iPhone, si adatta sia al widget quadrato che a quello orizzontale e si aggiorna da solo ogni mese):
+1. Scarica dal Play Store una qualsiasi app gratuita di **Web Widget** (es. *Web Widget* o *Meta Widget*).
+2. Aggiungi il widget alla schermata Home del tuo Android e inserisci l’URL:
+   `https://IL-TUO-LINK.netlify.app/widget.html`
+3. Imposta l’azione al tocco per aprire `https://IL-TUO-LINK.netlify.app` nel browser: così toccando il widget si apre subito il cuore 3D interattivo!
+
+---
+
 ## Come mandarle un nuovo cuore ogni mese (il 22!)
 1. Esporta il nuovo cuore 3D in `models/month-03.glb` e la sua anteprima in `previews/month-03.png`.
 2. Apri `hearts.json` e aggiungi un nuovo blocco dentro `"hearts": [ ... ]` (cambiando colore, data e dedica, es. oro rosa `#e6a4b4`, perla `#f5e6e8`, rubino `#b3002d`, ecc.).

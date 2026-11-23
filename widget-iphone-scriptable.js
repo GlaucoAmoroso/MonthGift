@@ -72,12 +72,12 @@ const data = await loadData();
 const latest = data.hearts[data.hearts.length - 1];
 const heartImg = latest?.preview ? await loadHeartImage(latest.preview) : null;
 const stats = computeStats(data.startDate, data.anniversaryDay || 22);
-const mesiText = stats.months === 1 ? "1 mese" : `${stats.months} mesi`;
+const monthsText = stats.months === 1 ? "1 month" : `${stats.months} months`;
 
 const w = new ListWidget();
-w.url = BASE_URL; // Toccare il widget apre subito il cuore 3D interattivo!
+w.url = BASE_URL; // Tapping the widget opens the interactive 3D heart!
 
-// Sfondo velluto bordeaux coerente con l'app
+// Deep burgundy velvet background matching the app
 const grad = new LinearGradient();
 grad.locations = [0, 0.55, 1];
 grad.colors = [new Color("#330c18"), new Color("#1a070d"), new Color("#0f0408")];
@@ -89,7 +89,7 @@ w.setPadding(14, 14, 14, 14);
 const family = config.widgetFamily || "small";
 
 if (family === "small") {
-  // Layout compatto (quadrato)
+  // Compact square layout
   const top = w.addText(data.couple);
   top.font = Font.italicSystemFont(12);
   top.textColor = new Color("#ffd6e0", 0.85);
@@ -108,17 +108,17 @@ if (family === "small") {
 
   w.addSpacer(4);
 
-  const count = w.addText(`${mesiText} ♥`);
+  const count = w.addText(`${monthsText} ♥`);
   count.font = Font.boldSystemFont(16);
   count.textColor = Color.white();
   count.centerAlignText();
 
-  const sub = w.addText(`${stats.days} giorni insieme`);
+  const sub = w.addText(`${stats.days} days together`);
   sub.font = Font.mediumSystemFont(10.5);
   sub.textColor = new Color("#ffb3c6", 0.85);
   sub.centerAlignText();
 } else {
-  // Layout medio/grande (orizzontale con cuore grande a sinistra + dettagli a destra)
+  // Medium / Large horizontal layout
   const row = w.addStack();
   row.layoutHorizontally();
   row.centerAlignContent();
@@ -139,19 +139,19 @@ if (family === "small") {
 
   col.addSpacer(4);
 
-  const main = col.addText(`${mesiText} insieme ♥`);
+  const main = col.addText(`${monthsText} together ♥`);
   main.font = Font.boldSystemFont(20);
   main.textColor = Color.white();
 
   col.addSpacer(3);
 
-  const daysTxt = col.addText(`${stats.days} giorni · ${data.hearts.length} ${data.hearts.length === 1 ? "cuore" : "cuori"}`);
+  const daysTxt = col.addText(`${stats.days} days · ${data.hearts.length} ${data.hearts.length === 1 ? "heart" : "hearts"}`);
   daysTxt.font = Font.mediumSystemFont(12);
   daysTxt.textColor = new Color("#ffb3c6", 0.85);
 
   col.addSpacer(8);
 
-  const nextTxt = col.addText(`Prossimo cuore tra ${stats.daysUntilNext}g · Tocca per 3D ↻`);
+  const nextTxt = col.addText(`Next heart in ${stats.daysUntilNext}d · Tap for 3D ↻`);
   nextTxt.font = Font.regularSystemFont(10.5);
   nextTxt.textColor = new Color("#ffffff", 0.65);
 }

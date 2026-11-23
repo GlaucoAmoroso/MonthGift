@@ -84,12 +84,12 @@
 </head>
 <body>
   <a class="widget-link" href="./index.html" target="_top">
-    <img class="heart-img" id="heartImg" src="previews/month-02.png" alt="Cuore 3D" />
+    <img class="heart-img" id="heartImg" src="previews/month-02.png" alt="3D Heart" />
     <div class="info">
       <div class="couple" id="couple">Glauco &amp; Yuliia</div>
-      <div class="months" id="months">2 mesi insieme ♥</div>
-      <div class="days" id="days">62 giorni · 1 cuore</div>
-      <div class="hint" id="hint">Tocca per aprire in 3D ↻</div>
+      <div class="months" id="months">2 months together ♥</div>
+      <div class="days" id="days">62 days · 1 heart</div>
+      <div class="hint" id="hint">Tap to view in 3D ↻</div>
     </div>
   </a>
 
@@ -118,11 +118,11 @@
         }
         const daysUntilNext = Math.max(0, Math.ceil((new Date(nextY, nextM, annivDay) - now) / 86400000));
 
-        const mesiText = months === 1 ? '1 mese' : `${months} mesi`;
-        const cuoriText = data.hearts.length === 1 ? '1 cuore' : `${data.hearts.length} cuori`;
-        document.getElementById('months').textContent = `${mesiText} insieme ♥`;
-        document.getElementById('days').textContent = `${days} giorni · ${cuoriText}`;
-        document.getElementById('hint').textContent = `Prossimo cuore tra ${daysUntilNext}g · 3D ↻`;
+        const monthsText = months === 1 ? '1 month' : `${months} months`;
+        const heartsText = data.hearts.length === 1 ? '1 heart' : `${data.hearts.length} hearts`;
+        document.getElementById('months').textContent = `${monthsText} together ♥`;
+        document.getElementById('days').textContent = `${days} days · ${heartsText}`;
+        document.getElementById('hint').textContent = `Next heart in ${daysUntilNext}d · 3D ↻`;
       } catch (e) {
         console.error(e);
       }
