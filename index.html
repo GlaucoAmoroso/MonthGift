@@ -271,17 +271,15 @@
       100% { transform: translate(calc(-50% + var(--dx)), -140px) scale(1.3); opacity: 0; }
     }
 
-    /* Collection Showcase Drawer ("Vetrinetta") */
+    /* Luxury Illuminated Display Cabinet ("Vetrina") */
     .showcase-overlay {
       position: fixed;
       inset: 0;
       z-index: 40;
-      background: rgba(14, 4, 8, 0.82);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: radial-gradient(circle at 50% 20%, #1c1614 0%, #0b0909 75%);
       display: flex;
       flex-direction: column;
-      padding: calc(env(safe-area-inset-top, 16px) + 16px) 18px calc(env(safe-area-inset-bottom, 16px) + 18px);
+      padding: calc(env(safe-area-inset-top, 14px) + 12px) 12px calc(env(safe-area-inset-bottom, 14px) + 14px);
       opacity: 0;
       pointer-events: none;
       transform: translateY(24px);
@@ -296,92 +294,229 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: 520px;
+      max-width: 500px;
       width: 100%;
-      margin: 0 auto 16px;
+      margin: 0 auto 12px;
+      padding: 0 4px;
     }
     .showcase-title {
       font-family: 'Cormorant Garamond', Georgia, serif;
       font-style: italic;
-      font-size: 28px;
+      font-size: 27px;
       font-weight: 600;
       margin: 0;
+      color: #f7ead7;
+      text-shadow: 0 2px 14px rgba(255, 206, 138, 0.22);
     }
     .showcase-sub {
-      font-size: 12px;
-      color: var(--text-soft);
-      margin-top: 2px;
+      font-size: 11.5px;
+      color: rgba(240, 214, 178, 0.68);
+      margin-top: 1px;
+      letter-spacing: 0.03em;
     }
     .close-btn {
       appearance: none;
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      border: 1px solid var(--glass-border);
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-main);
-      font-size: 16px;
+      border: 1px solid rgba(255, 224, 178, 0.22);
+      background: rgba(255, 255, 255, 0.06);
+      color: #f7ead7;
+      font-size: 15px;
       cursor: pointer;
       display: grid;
       place-items: center;
     }
-    .showcase-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      max-width: 520px;
+
+    /* Matte Black Cabinet Frame with Glass Doors */
+    .cabinet-frame {
+      position: relative;
+      flex: 1;
+      max-width: 500px;
       width: 100%;
       margin: 0 auto;
+      border-radius: 14px;
+      padding: 10px;
+      background: linear-gradient(160deg, #1b1817 0%, #0d0b0b 100%);
+      border: 2px solid #26211f;
+      box-shadow:
+        inset 0 0 28px rgba(0, 0, 0, 0.9),
+        0 20px 50px rgba(0, 0, 0, 0.75);
       overflow-y: auto;
-      padding-bottom: 16px;
+      overflow-x: hidden;
+      scrollbar-width: none;
     }
-    .shelf-card {
+    .cabinet-frame::-webkit-scrollbar { display: none; }
+
+    /* Subtle glass door reflection & center vertical seam */
+    .cabinet-glass-overlay {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .cabinet-glass-overlay::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 1.5px;
+      height: 100vh;
+      background: linear-gradient(180deg, rgba(255,244,225,0.22), rgba(255,244,225,0.06) 50%, rgba(255,244,225,0.18));
+      box-shadow: 0 0 6px rgba(0,0,0,0.8);
+    }
+    .cabinet-glass-overlay::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      height: 100vh;
+      background: linear-gradient(118deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.015) 28%, transparent 46%, rgba(255,244,225,0.03) 72%, transparent 100%);
+    }
+
+    .cabinet-shelves {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Individual Illuminated Shelf Row */
+    .cabinet-shelf {
+      position: relative;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #1b1613 0%, #120f0e 58%, #090808 100%);
+      border-bottom: 6px solid #161312;
+      box-shadow:
+        0 6px 14px rgba(0, 0, 0, 0.75),
+        inset 0 2px 10px rgba(255, 212, 148, 0.25);
+      overflow: hidden;
+    }
+
+    /* Warm Golden LED Strip Under Shelf Top */
+    .shelf-led {
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg,
+        rgba(255, 216, 155, 0.45) 0%,
+        #fff0d1 15%,
+        #ffe0aa 50%,
+        #fff0d1 85%,
+        rgba(255, 216, 155, 0.45) 100%);
+      box-shadow:
+        0 2px 14px 3px rgba(255, 206, 134, 0.55),
+        0 10px 28px 6px rgba(255, 190, 110, 0.24);
+    }
+
+    .shelf-bays {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      padding: 10px 8px 8px;
+      background: linear-gradient(180deg, rgba(255, 210, 145, 0.14) 0%, rgba(255, 190, 110, 0.03) 42%, rgba(0, 0, 0, 0.28) 100%);
+    }
+
+    /* Individual Dark Velvet Watch-Style Bay */
+    .velvet-bay {
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      text-align: center;
-      padding: 14px 10px 12px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 215, 225, 0.14);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.03) 100%);
+      justify-content: space-between;
+      padding: 8px 4px 7px;
+      border-radius: 7px;
+      background: linear-gradient(180deg, #1c1817 0%, #131010 55%, #0c0a0a 100%);
+      border: 1px solid rgba(255, 224, 180, 0.06);
+      box-shadow:
+        inset 0 8px 14px rgba(0, 0, 0, 0.55),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.7),
+        0 2px 6px rgba(0, 0, 0, 0.6);
+      min-height: 118px;
       cursor: pointer;
-      transition: transform 0.18s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.16s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .shelf-card:active { transform: scale(0.96); }
-    .shelf-card.active {
-      border-color: rgba(255, 117, 143, 0.7);
-      box-shadow: 0 0 22px rgba(255, 77, 109, 0.22);
+    .velvet-bay:active { transform: scale(0.96); }
+    .velvet-bay.active {
+      border-color: rgba(255, 214, 153, 0.55);
+      box-shadow:
+        inset 0 0 18px rgba(255, 198, 120, 0.18),
+        0 0 14px rgba(255, 190, 110, 0.22);
     }
-    .shelf-card.locked {
-      border-style: dashed;
-      opacity: 0.65;
+    .velvet-bay.empty {
       cursor: default;
+    }
+    .velvet-bay.empty:active { transform: none; }
+
+    /* Velvet Cushion Pillow behind each heart */
+    .velvet-cushion {
+      position: relative;
+      width: 68px;
+      height: 70px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 50% 25%, #2a2423 0%, #181414 68%, #0e0c0c 100%);
+      box-shadow:
+        inset 0 2px 4px rgba(255, 224, 180, 0.12),
+        0 5px 10px rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
       justify-content: center;
-      min-height: 176px;
+      margin-bottom: 6px;
     }
-    .shelf-thumb {
-      width: 96px;
-      height: 96px;
+
+    .bay-heart-img {
+      width: 62px;
+      height: 62px;
       object-fit: contain;
-      filter: drop-shadow(0 8px 16px rgba(255, 45, 85, 0.28));
-      margin-bottom: 8px;
+      filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.78));
+      transition: transform 0.2s ease;
     }
-    .shelf-month {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 19px;
+    .velvet-bay.active .bay-heart-img {
+      transform: scale(1.06);
+    }
+
+    .bay-empty-mark {
+      font-size: 20px;
+      color: rgba(255, 220, 175, 0.14);
+      line-height: 1;
+    }
+    .velvet-bay.next-up .bay-empty-mark {
+      color: rgba(255, 210, 150, 0.34);
+    }
+
+    /* Engraved Brass Shelf Plaque */
+    .bay-plaque {
+      width: 100%;
+      text-align: center;
+      padding: 2px 3px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, rgba(255, 215, 155, 0.10), rgba(160, 115, 65, 0.06));
+      border: 1px solid rgba(255, 218, 165, 0.12);
+    }
+    .bay-month {
+      font-size: 9.5px;
       font-weight: 600;
-      line-height: 1.1;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ebd3b0;
+      line-height: 1.2;
     }
-    .shelf-date {
-      font-size: 11px;
-      color: var(--text-soft);
-      margin-top: 3px;
+    .bay-sub {
+      font-size: 8.5px;
+      color: rgba(235, 211, 176, 0.58);
+      line-height: 1.2;
     }
-    .shelf-lock-icon {
-      font-size: 28px;
-      margin-bottom: 8px;
-      opacity: 0.85;
+    .velvet-bay.empty .bay-plaque {
+      background: rgba(255, 255, 255, 0.02);
+      border-color: rgba(255, 218, 165, 0.06);
+    }
+    .velvet-bay.empty .bay-month {
+      color: rgba(235, 211, 176, 0.36);
+    }
+    .velvet-bay.next-up .bay-month {
+      color: rgba(255, 214, 153, 0.72);
     }
   </style>
 
@@ -429,16 +564,19 @@
     </div>
   </div>
 
-  <!-- Collection Showcase Drawer -->
+  <!-- Luxury Illuminated Display Cabinet -->
   <div class="showcase-overlay" id="showcase">
     <div class="showcase-header">
       <div>
-        <h2 class="showcase-title">Our Collection</h2>
+        <h2 class="showcase-title">Our Display Case</h2>
         <div class="showcase-sub" id="showcaseSub">1 heart collected</div>
       </div>
       <button class="close-btn" id="closeShowcase" aria-label="Close">✕</button>
     </div>
-    <div class="showcase-grid" id="showcaseGrid"></div>
+    <div class="cabinet-frame">
+      <div class="cabinet-glass-overlay"></div>
+      <div class="cabinet-shelves" id="showcaseGrid"></div>
+    </div>
   </div>
 
   <script type="module">
@@ -672,30 +810,66 @@
 
       function renderShowcase() {
         showcaseGrid.innerHTML = '';
-        hearts.forEach((h, idx) => {
-          const card = document.createElement('div');
-          card.className = 'shelf-card' + (idx === activeIdx ? ' active' : '');
-          card.innerHTML = `
-            <img class="shelf-thumb" src="${h.preview}?v=${Date.now()}" alt="Month ${h.month}" />
-            <div class="shelf-month">Month ${h.month}</div>
-            <div class="shelf-date">${h.dateDisplay}</div>
-          `;
-          card.addEventListener('click', () => {
-            selectHeart(idx);
-            showcase.classList.remove('open');
-          });
-          showcaseGrid.appendChild(card);
-        });
+        const byMonth = new Map();
+        hearts.forEach((h, idx) => byMonth.set(h.month, { heart: h, idx }));
 
-        const nextNum = Math.max((hearts[hearts.length - 1]?.month || 0) + 1, stats.nextMonthNum);
-        const locked = document.createElement('div');
-        locked.className = 'shelf-card locked';
-        locked.innerHTML = `
-          <div class="shelf-lock-icon">🔒</div>
-          <div class="shelf-month">Month ${nextNum}</div>
-          <div class="shelf-date">Unlocks in ${stats.daysUntilNext} days</div>
-        `;
-        showcaseGrid.appendChild(locked);
+        const firstMonth = hearts.length > 0 ? Math.min(...hearts.map(h => h.month)) : 1;
+        const maxMonth = hearts.length > 0 ? Math.max(...hearts.map(h => h.month)) : 1;
+        const totalSlots = Math.max(12, Math.ceil((maxMonth - firstMonth + 4) / 3) * 3);
+        const nextUnlockMonth = maxMonth + 1;
+
+        // Build illuminated shelves (3 velvet bays per shelf)
+        for (let row = 0; row < totalSlots / 3; row++) {
+          const shelf = document.createElement('div');
+          shelf.className = 'cabinet-shelf';
+
+          const led = document.createElement('div');
+          led.className = 'shelf-led';
+          shelf.appendChild(led);
+
+          const bays = document.createElement('div');
+          bays.className = 'shelf-bays';
+
+          for (let col = 0; col < 3; col++) {
+            const mNum = firstMonth + row * 3 + col;
+            const entry = byMonth.get(mNum);
+            const bay = document.createElement('div');
+
+            if (entry) {
+              const { heart: h, idx } = entry;
+              bay.className = 'velvet-bay' + (idx === activeIdx ? ' active' : '');
+              bay.innerHTML = `
+                <div class="velvet-cushion">
+                  <img class="bay-heart-img" src="${h.preview}?v=${Date.now()}" alt="Month ${h.month}" />
+                </div>
+                <div class="bay-plaque">
+                  <div class="bay-month">Month ${h.month}</div>
+                  <div class="bay-sub">${h.dateDisplay}</div>
+                </div>
+              `;
+              bay.addEventListener('click', () => {
+                selectHeart(idx);
+                showcase.classList.remove('open');
+              });
+            } else {
+              const isNext = (mNum === nextUnlockMonth);
+              bay.className = 'velvet-bay empty' + (isNext ? ' next-up' : '');
+              bay.innerHTML = `
+                <div class="velvet-cushion">
+                  <span class="bay-empty-mark">${isNext ? '♡' : '·'}</span>
+                </div>
+                <div class="bay-plaque">
+                  <div class="bay-month">Month ${mNum}</div>
+                  <div class="bay-sub">${isNext ? `in ${stats.daysUntilNext} days` : 'waiting…'}</div>
+                </div>
+              `;
+            }
+            bays.appendChild(bay);
+          }
+
+          shelf.appendChild(bays);
+          showcaseGrid.appendChild(shelf);
+        }
       }
 
       renderTimeline();
